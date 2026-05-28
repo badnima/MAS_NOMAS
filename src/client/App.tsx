@@ -10,7 +10,7 @@ const SPOTLIGHT_STORAGE_KEY = "mas-spotlight-index";
 const SPOTLIGHT_ROTATION_INTERVAL_MS = 8000;
 const SPARKLE_COUNT = 20;
 const BUBBLE_COUNT = 20;
-const BEDAZZLE_BURST_COUNT = 100;
+const BEDAZZLE_BURST_COUNT = 150;
 const FLAIR_CHIPS = [
   "Pinktopia",
   "Glitterati",
