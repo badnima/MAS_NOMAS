@@ -319,9 +319,6 @@ function App() {
               <div className="snapshot-panel">
                 <p className="snapshot-title">{person.note.snapshot.title}</p>
                 <p className="snapshot-snippet">{person.note.snapshot.snippet}</p>
-                <a href={person.linkedinUrl} target="_blank" rel="noreferrer">
-                  Visit LinkedIn
-                </a>
               </div>
             </article>
           ))}
