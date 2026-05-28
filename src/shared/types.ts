@@ -55,3 +55,20 @@ export interface DashboardPayload {
   generatedAt: string;
   summary: string;
 }
+
+export interface AuthenticatedLinkedInMember {
+  subject: string;
+  name: string;
+  givenName: string;
+  familyName: string;
+  picture?: string;
+  email?: string;
+  emailVerified?: boolean;
+  locale?: string;
+  connectedAt: string;
+}
+
+export interface AuthStatusPayload {
+  authEnabled: boolean;
+  member: AuthenticatedLinkedInMember | null;
+}

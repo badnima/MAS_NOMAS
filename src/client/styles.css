@@ -137,9 +137,93 @@ button {
   cursor: pointer;
 }
 
+.linkedin-button,
+.ghost-button {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.9rem 1.35rem;
+  font-weight: 800;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+
+.linkedin-button {
+  background: linear-gradient(135deg, #0a66c2, #57a7ff);
+  color: white;
+}
+
+.ghost-button {
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--ink);
+}
+
 .refresh-button:disabled {
   opacity: 0.72;
   cursor: progress;
+}
+
+.linkedin-card {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.85rem 1rem;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--shadow);
+  max-width: 320px;
+}
+
+.linkedin-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.linkedin-avatar-fallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--pink), var(--coral));
+  color: white;
+  font-size: 1.35rem;
+  font-weight: 900;
+}
+
+.linkedin-copy p,
+.linkedin-note {
+  margin: 0;
+}
+
+.linkedin-kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.7rem;
+  font-weight: 900;
+  color: #0a66c2;
+}
+
+.linkedin-name {
+  margin-top: 0.2rem;
+  font-weight: 900;
+}
+
+.linkedin-email {
+  margin-top: 0.15rem;
+  font-size: 0.92rem;
+  color: rgba(71, 28, 86, 0.75);
+}
+
+.linkedin-note {
+  max-width: 320px;
+  padding: 0.85rem 1rem;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: var(--shadow);
+  font-weight: 700;
+  line-height: 1.5;
 }
 
 .envelope-panel {

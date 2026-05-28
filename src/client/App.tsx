@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 
-import type { DashboardPayload, PersonWithNote } from "../shared/types";
+import type {
+  AuthStatusPayload,
+  DashboardPayload,
+  PersonWithNote
+} from "../shared/types";
 
 function formatTimestamp(value: string) {
   return new Intl.DateTimeFormat("en-US", {
@@ -11,12 +15,32 @@ function formatTimestamp(value: string) {
 
 function App() {
   const [dashboard, setDashboard] = useState<DashboardPayload | null>(null);
+  const [authStatus, setAuthStatus] = useState<AuthStatusPayload | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [spotlightIndex, setSpotlightIndex] = useState(0);
   const [pulseKey, setPulseKey] = useState(0);
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const linkedInError = params.get("linkedin_error");
+
+    if (linkedInError) {
+      setError("LinkedIn sign-in did not complete. Please check the app configuration and try again.");
+    }
+
+    if (params.has("linkedin") || linkedInError) {
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    void loadAuthStatus().catch((caughtError: unknown) => {
+      setError(
+        caughtError instanceof Error
+          ? caughtError.message
+          : "Unable to load LinkedIn authentication status."
+      );
+    });
     void loadDashboard();
   }, []);
 
@@ -44,6 +68,53 @@ function App() {
       );
     } finally {
       setIsRefreshing(false);
+      }
+  }
+
+  async function loadAuthStatus() {
+    const response = await fetch("/api/auth/me");
+
+    if (!response.ok) {
+      throw new Error("Unable to load LinkedIn authentication status.");
+    }
+
+    const payload = (await response.json()) as AuthStatusPayload;
+    setAuthStatus(payload);
+  }
+
+  function connectLinkedIn() {
+    window.location.assign("/api/auth/linkedin/start");
+  }
+
+  async function signOutLinkedIn() {
+    try {
+      setIsSigningOut(true);
+
+      const response = await fetch("/api/auth/logout", {
+        method: "POST"
+      });
+
+      if (!response.ok) {
+        throw new Error("Unable to sign out of LinkedIn.");
+      }
+
+      setAuthStatus((currentStatus) =>
+        currentStatus
+          ? {
+              ...currentStatus,
+              member: null
+            }
+          : {
+              authEnabled: true,
+              member: null
+            }
+      );
+    } catch (caughtError) {
+      setError(
+        caughtError instanceof Error ? caughtError.message : "LinkedIn sign-out took an unexpected turn."
+      );
+    } finally {
+      setIsSigningOut(false);
     }
   }
 
@@ -100,6 +171,48 @@ function App() {
           </div>
 
           <div className="hero-actions">
+            {authStatus?.member ? (
+              <div className="linkedin-card">
+                {authStatus.member.picture ? (
+                  <img
+                    className="linkedin-avatar"
+                    src={authStatus.member.picture}
+                    alt={authStatus.member.name}
+                  />
+                ) : (
+                  <div className="linkedin-avatar linkedin-avatar-fallback" aria-hidden="true">
+                    {authStatus.member.givenName.charAt(0)}
+                  </div>
+                )}
+                <div className="linkedin-copy">
+                  <p className="linkedin-kicker">LinkedIn Connected</p>
+                  <p className="linkedin-name">{authStatus.member.name}</p>
+                  {authStatus.member.email ? (
+                    <p className="linkedin-email">{authStatus.member.email}</p>
+                  ) : null}
+                </div>
+              </div>
+            ) : authStatus?.authEnabled ? (
+              <button className="linkedin-button" type="button" onClick={connectLinkedIn}>
+                Connect LinkedIn
+              </button>
+            ) : authStatus ? (
+              <p className="linkedin-note">
+                Add LinkedIn OAuth environment variables to enable authenticated profile data.
+              </p>
+            ) : null}
+
+            {authStatus?.member ? (
+              <button
+                className="ghost-button"
+                type="button"
+                onClick={() => void signOutLinkedIn()}
+                disabled={isSigningOut}
+              >
+                {isSigningOut ? "Signing out..." : "Sign out"}
+              </button>
+            ) : null}
+
             <button
               className="refresh-button"
               type="button"

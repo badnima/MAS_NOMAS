@@ -15,8 +15,16 @@ services:
         value: production
       - key: DATA_DIR
         value: /var/data
+      - key: APP_SESSION_SECRET
+        generateValue: true
       - key: REFRESH_TOKEN
         generateValue: true
+      - key: LINKEDIN_CLIENT_ID
+        sync: false
+      - key: LINKEDIN_CLIENT_SECRET
+        sync: false
+      - key: LINKEDIN_REDIRECT_URI
+        sync: false
   - type: cron
     name: mas-daily-refresh
     runtime: node

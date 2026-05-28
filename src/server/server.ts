@@ -3,6 +3,12 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { getDashboard } from "./services/dashboard.js";
+import {
+  getLinkedInAuthStatus,
+  handleLinkedInCallback,
+  logoutLinkedInAuth,
+  startLinkedInAuth
+} from "./services/linkedinAuth.js";
 import { getRuntimeDataDirectory } from "./services/storage.js";
 
 const app = express();
@@ -12,6 +18,8 @@ const isProduction = process.env.NODE_ENV === "production";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const clientDistPath = path.resolve(__dirname, "../../client");
+
+app.set("trust proxy", 1);
 
 function asyncRoute<TRequest = express.Request, TResponse = express.Response>(
   handler: (request: TRequest, response: TResponse) => Promise<void>
@@ -28,6 +36,22 @@ app.get("/api/health", (_request, response) => {
     ok: true,
     dataDir: getRuntimeDataDirectory()
   });
+});
+
+app.get("/api/auth/me", (request, response) => {
+  response.json(getLinkedInAuthStatus(request));
+});
+
+app.get("/api/auth/linkedin/start", (request, response) => {
+  startLinkedInAuth(request, response);
+});
+
+app.get("/api/auth/linkedin/callback", asyncRoute(async (request, response) => {
+  await handleLinkedInCallback(request, response);
+}));
+
+app.post("/api/auth/logout", (request, response) => {
+  logoutLinkedInAuth(request, response);
 });
 
 app.get("/api/dashboard", asyncRoute(async (_request, response) => {
