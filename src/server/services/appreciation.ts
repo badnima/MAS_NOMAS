@@ -58,16 +58,16 @@ const THEME_PHRASES: Record<AppreciationTheme, string[]> = {
 
 const OPENERS = [
   "Today MAS is cheering for",
-  "A bright note for",
-  "Today’s admiration spotlight belongs to",
-  "With balloons and gratitude, we celebrate"
+  "A shimmery note for",
+  "Today’s Glitterati spotlight belongs to",
+  "With Flutterheart gratitude, we celebrate"
 ];
 
 const CLOSERS = [
-  "That kind of energy deserves confetti.",
-  "It is exactly the kind of presence a Mutual Admiration Society is made for.",
-  "The room gets better when that spirit is in it.",
-  "That is some very real unicorn-level encouragement."
+  "That kind of energy is dazzleworthy.",
+  "It is exactly the kind of glow-up the Blingverse runs on.",
+  "The room gets gorgeously brighter when that spirit is in it.",
+  "That is some very real sparkle-core encouragement."
 ];
 
 function pickFrom<T>(values: T[], seed: number) {
@@ -137,6 +137,6 @@ export async function buildDashboardFromPeople(people: PersonConfig[]): Promise<
   return {
     generatedAt,
     people: withNotes,
-    summary: "Fresh gratitude notes, balloons loaded, and encouragement ready to ship."
+    summary: "Sparkledream gratitude notes, Pearlpop balloons loaded, and the Gleamsquad is ready to bedazzle Pinktopia."
   };
 }

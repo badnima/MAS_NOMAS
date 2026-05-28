@@ -99,7 +99,7 @@ button {
 }
 
 .hero-copy::after {
-  content: "mutual admiration in full color";
+  content: "shimmery sparkle-core joy for the glitterati";
   display: inline-flex;
   margin-top: 0.4rem;
   padding: 0.55rem 0.95rem;
@@ -111,6 +111,26 @@ button {
   letter-spacing: 0.05em;
   text-transform: lowercase;
   box-shadow: var(--shadow);
+}
+
+.flair-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 0.65rem;
+  max-width: 42rem;
+}
+
+.flair-chip {
+  padding: 0.42rem 0.8rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.78), rgba(255, 216, 77, 0.26));
+  border: 1px solid rgba(255, 79, 166, 0.14);
+  box-shadow: var(--shadow);
+  color: #b92f73;
+  font-size: 0.84rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
 }
 
 .eyebrow {

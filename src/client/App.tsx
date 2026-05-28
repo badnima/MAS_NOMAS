@@ -10,6 +10,16 @@ const SPOTLIGHT_STORAGE_KEY = "mas-spotlight-index";
 const SPOTLIGHT_ROTATION_INTERVAL_MS = 8000;
 const SPARKLE_COUNT = 14;
 const BUBBLE_COUNT = 7;
+const FLAIR_CHIPS = [
+  "Pinktopia",
+  "Glitterati",
+  "Sparkledream",
+  "Glossglow",
+  "Flutterheart",
+  "Pearlpop",
+  "Blingverse",
+  "Gleamsquad"
+] as const;
 const FLYING_CREATURES = [
   { className: "unicorn-flight-one", icon: "🦄" },
   { className: "horse-flight", icon: "🐎" },
@@ -267,6 +277,13 @@ function App() {
         <header className="hero">
           <div className="hero-copy">
             <p className="eyebrow">MAS: Mutual Admiration Society</p>
+            <div className="flair-chip-row" aria-label="MAS flair">
+              {FLAIR_CHIPS.map((chip) => (
+                <span key={chip} className="flair-chip">
+                  {chip}
+                </span>
+              ))}
+            </div>
           </div>
 
           <div className="hero-actions">
@@ -284,7 +301,7 @@ function App() {
                   </div>
                 )}
                 <div className="linkedin-copy">
-                  <p className="linkedin-kicker">LinkedIn Connected</p>
+                  <p className="linkedin-kicker">Gleamsquad Connected</p>
                   <p className="linkedin-name">{authStatus.member.name}</p>
                   {authStatus.member.email ? (
                     <p className="linkedin-email">{authStatus.member.email}</p>
@@ -293,7 +310,7 @@ function App() {
               </div>
             ) : authStatus?.authEnabled ? (
               <button className="linkedin-button" type="button" onClick={connectLinkedIn}>
-                Connect LinkedIn
+                Sparkify LinkedIn
               </button>
             ) : null}
 
@@ -304,7 +321,7 @@ function App() {
                 onClick={() => void signOutLinkedIn()}
                 disabled={isSigningOut}
               >
-                {isSigningOut ? "Signing out..." : "Sign out"}
+                {isSigningOut ? "Blinging out..." : "Bling-out"}
               </button>
             ) : null}
 
@@ -314,7 +331,7 @@ function App() {
               onClick={() => void loadDashboard(true)}
               disabled={isRefreshing}
             >
-              {isRefreshing ? "Refreshing joy..." : "Refresh today’s notes"}
+              {isRefreshing ? "Shimmering..." : "Bedazzle today’s notes"}
             </button>
           </div>
         </header>
@@ -323,7 +340,7 @@ function App() {
           <div key={pulseKey} className="envelope-card">
             <div className="envelope-flap" />
             <div className="envelope-letter">
-              <p className="letter-label">Spotlight Note</p>
+              <p className="letter-label">Sparkledream Spotlight</p>
               {spotlightPerson ? (
                 <>
                   <h2>{spotlightPerson.note.headline}</h2>
@@ -337,16 +354,16 @@ function App() {
                   </div>
                 </>
               ) : (
-                <p>Loading the confetti cannon...</p>
+                <p>Twinkling up the Pearlpop confetti cannon...</p>
               )}
             </div>
           </div>
         </section>
 
         <section className="meta-strip">
-          <p>{dashboard?.summary ?? "Gathering today’s appreciation notes."}</p>
+          <p>{dashboard?.summary ?? "Gathering today’s Glitterati notes."}</p>
           <p>
-            {dashboard ? `Last refreshed ${formatTimestamp(dashboard.generatedAt)}` : "Preparing the first glow-up."}
+            {dashboard ? `Last refreshed ${formatTimestamp(dashboard.generatedAt)}` : "Preparing the next glow-up in Pinktopia."}
           </p>
         </section>
 
@@ -385,7 +402,7 @@ function App() {
 
         {authStatus && !authStatus.authEnabled ? (
           <p className="linkedin-note linkedin-note-footer">
-            Add LinkedIn OAuth environment variables to enable authenticated profile data.
+            Lowkey glowing? Add LinkedIn OAuth environment variables to enable authenticated profile data.
           </p>
         ) : null}
       </main>
