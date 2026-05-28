@@ -534,6 +534,7 @@ button {
 .sky-ribbons,
 .sparkle-field,
 .bubble-stream,
+.rainbow-unicorn,
 .flying-creatures,
 .sparkle-row,
 .balloon-cluster {
@@ -917,6 +918,95 @@ button {
   animation-delay: 1.2s;
 }
 
+.rainbow-unicorn {
+  position: fixed;
+  top: 12%;
+  left: 104vw;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  z-index: 5;
+  filter: drop-shadow(0 10px 14px rgba(83, 28, 65, 0.18));
+  opacity: 0;
+  animation: rainbow-unicorn-fly 24s linear infinite -3s;
+}
+
+.rainbow-unicorn-icon {
+  position: relative;
+  z-index: 2;
+  font-size: clamp(2.8rem, 4vw, 4.8rem);
+}
+
+.rainbow-trail {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  width: clamp(10rem, 18vw, 18rem);
+  padding: 0.5rem 0;
+}
+
+.rainbow-trail::before {
+  content: "";
+  position: absolute;
+  inset: -0.35rem -1rem -0.35rem 0;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));
+  filter: blur(12px);
+  opacity: 0.75;
+}
+
+.rainbow-band {
+  display: block;
+  height: 0.34rem;
+  border-radius: 999px;
+  transform-origin: left center;
+  animation: rainbow-ripple 1.9s ease-in-out infinite;
+}
+
+.rainbow-band:nth-child(2) {
+  animation-delay: -0.15s;
+}
+
+.rainbow-band:nth-child(3) {
+  animation-delay: -0.3s;
+}
+
+.rainbow-band:nth-child(4) {
+  animation-delay: -0.45s;
+}
+
+.rainbow-band:nth-child(5) {
+  animation-delay: -0.6s;
+}
+
+.rainbow-band:nth-child(6) {
+  animation-delay: -0.75s;
+}
+
+.rainbow-red {
+  background: linear-gradient(90deg, rgba(255, 89, 94, 0.92), rgba(255, 89, 94, 0.12));
+}
+
+.rainbow-orange {
+  background: linear-gradient(90deg, rgba(255, 146, 43, 0.92), rgba(255, 146, 43, 0.12));
+}
+
+.rainbow-yellow {
+  background: linear-gradient(90deg, rgba(255, 219, 88, 0.96), rgba(255, 219, 88, 0.12));
+}
+
+.rainbow-green {
+  background: linear-gradient(90deg, rgba(95, 214, 104, 0.92), rgba(95, 214, 104, 0.12));
+}
+
+.rainbow-blue {
+  background: linear-gradient(90deg, rgba(87, 186, 255, 0.92), rgba(87, 186, 255, 0.12));
+}
+
+.rainbow-violet {
+  background: linear-gradient(90deg, rgba(175, 108, 255, 0.92), rgba(175, 108, 255, 0.12));
+}
+
 .flying-creatures {
   position: fixed;
   inset: 0;
@@ -1086,6 +1176,50 @@ button {
   }
 }
 
+@keyframes rainbow-unicorn-fly {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(2deg) scale(0.88);
+    opacity: 0;
+  }
+
+  8% {
+    opacity: 0.97;
+  }
+
+  28% {
+    transform: translate3d(-26vw, 2vh, 0) rotate(-3deg) scale(0.95);
+    opacity: 1;
+  }
+
+  58% {
+    transform: translate3d(-64vw, -3vh, 0) rotate(4deg) scale(1.02);
+    opacity: 1;
+  }
+
+  84% {
+    transform: translate3d(-108vw, 1vh, 0) rotate(-2deg) scale(0.92);
+    opacity: 0.95;
+  }
+
+  100% {
+    transform: translate3d(-138vw, -1vh, 0) rotate(0deg) scale(0.86);
+    opacity: 0;
+  }
+}
+
+@keyframes rainbow-ripple {
+  0%,
+  100% {
+    transform: translateY(0) scaleX(1);
+    opacity: 0.86;
+  }
+
+  50% {
+    transform: translateY(1px) scaleX(1.06);
+    opacity: 1;
+  }
+}
+
 @keyframes fly-across {
   0% {
     transform: translate3d(0, 0, 0) rotate(-6deg) scale(0.82);
@@ -1200,6 +1334,7 @@ button {
 
   .balloon-cluster,
   .bubble-stream,
+  .rainbow-unicorn,
   .unicorn-flight-two {
     display: none;
   }

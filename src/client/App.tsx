@@ -219,6 +219,17 @@ function App() {
         <span />
         <span />
       </div>
+      <div className="rainbow-unicorn" aria-hidden="true">
+        <span className="rainbow-unicorn-icon">🦄</span>
+        <span className="rainbow-trail">
+          <span className="rainbow-band rainbow-red" />
+          <span className="rainbow-band rainbow-orange" />
+          <span className="rainbow-band rainbow-yellow" />
+          <span className="rainbow-band rainbow-green" />
+          <span className="rainbow-band rainbow-blue" />
+          <span className="rainbow-band rainbow-violet" />
+        </span>
+      </div>
       <div className="flying-creatures" aria-hidden="true">
         {FLYING_CREATURES.map((creature) => (
           <span key={creature.className} className={`flying-creature ${creature.className}`}>
