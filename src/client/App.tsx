@@ -8,6 +8,13 @@ import type {
 
 const SPOTLIGHT_STORAGE_KEY = "mas-spotlight-index";
 const SPOTLIGHT_ROTATION_INTERVAL_MS = 8000;
+const SPARKLE_COUNT = 14;
+const BUBBLE_COUNT = 7;
+const FLYING_CREATURES = [
+  { className: "unicorn-flight-one", icon: "🦄" },
+  { className: "horse-flight", icon: "🐎" },
+  { className: "unicorn-flight-two", icon: "🦄" }
+] as const;
 
 function formatTimestamp(value: string) {
   return new Intl.DateTimeFormat("en-US", {
@@ -101,7 +108,7 @@ function App() {
       );
     } finally {
       setIsRefreshing(false);
-      }
+    }
   }
 
   async function loadAuthStatus() {
@@ -176,19 +183,48 @@ function App() {
 
   return (
     <div className="page-shell">
+      <div className="sky-ribbons" aria-hidden="true">
+        <span className="sky-ribbon ribbon-pink" />
+        <span className="sky-ribbon ribbon-yellow" />
+        <span className="sky-ribbon ribbon-green" />
+      </div>
       <div className="floating-blob blob-pink" />
       <div className="floating-blob blob-yellow" />
       <div className="floating-blob blob-green" />
+      <div className="sparkle-field" aria-hidden="true">
+        {Array.from({ length: SPARKLE_COUNT }, (_, index) => (
+          <span key={`sparkle-${index}`} />
+        ))}
+      </div>
+      <div className="bubble-stream bubble-left" aria-hidden="true">
+        {Array.from({ length: BUBBLE_COUNT }, (_, index) => (
+          <span key={`bubble-left-${index}`} />
+        ))}
+      </div>
+      <div className="bubble-stream bubble-right" aria-hidden="true">
+        {Array.from({ length: BUBBLE_COUNT }, (_, index) => (
+          <span key={`bubble-right-${index}`} />
+        ))}
+      </div>
       <div className="balloon-cluster" aria-hidden="true">
         <span className="balloon balloon-pink" />
         <span className="balloon balloon-yellow" />
         <span className="balloon balloon-green" />
+        <span className="balloon balloon-coral" />
+        <span className="balloon balloon-sun" />
       </div>
       <div className="sparkle-row">
         <span />
         <span />
         <span />
         <span />
+      </div>
+      <div className="flying-creatures" aria-hidden="true">
+        {FLYING_CREATURES.map((creature) => (
+          <span key={creature.className} className={`flying-creature ${creature.className}`}>
+            {creature.icon}
+          </span>
+        ))}
       </div>
 
       <button
@@ -232,10 +268,6 @@ function App() {
               <button className="linkedin-button" type="button" onClick={connectLinkedIn}>
                 Connect LinkedIn
               </button>
-            ) : authStatus ? (
-              <p className="linkedin-note">
-                Add LinkedIn OAuth environment variables to enable authenticated profile data.
-              </p>
             ) : null}
 
             {authStatus?.member ? (
@@ -323,6 +355,12 @@ function App() {
             </article>
           ))}
         </section>
+
+        {authStatus && !authStatus.authEnabled ? (
+          <p className="linkedin-note linkedin-note-footer">
+            Add LinkedIn OAuth environment variables to enable authenticated profile data.
+          </p>
+        ) : null}
       </main>
     </div>
   );
