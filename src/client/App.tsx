@@ -8,9 +8,9 @@ import type {
 
 const SPOTLIGHT_STORAGE_KEY = "mas-spotlight-index";
 const SPOTLIGHT_ROTATION_INTERVAL_MS = 8000;
-const SPARKLE_COUNT = 14;
-const BUBBLE_COUNT = 7;
-const BEDAZZLE_BURST_COUNT = 50;
+const SPARKLE_COUNT = 20;
+const BUBBLE_COUNT = 20;
+const BEDAZZLE_BURST_COUNT = 100;
 const FLAIR_CHIPS = [
   "Pinktopia",
   "Glitterati",
