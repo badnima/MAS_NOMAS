@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: mas-mutual-admiration-society
+    runtime: node
+    plan: starter
+    region: oregon
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    disk:
+      name: mas-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATA_DIR
+        value: /var/data
+      - key: REFRESH_TOKEN
+        generateValue: true
+  - type: cron
+    name: mas-daily-refresh
+    runtime: node
+    plan: starter
+    region: oregon
+    buildCommand: npm install
+    startCommand: npm run cron:refresh
+    schedule: "0 16 * * *"
+    envVars:
+      - key: APP_HOSTPORT
+        fromService:
+          type: web
+          name: mas-mutual-admiration-society
+          property: hostport
+      - key: REFRESH_TOKEN
+        fromService:
+          type: web
+          name: mas-mutual-admiration-society
+          envVarKey: REFRESH_TOKEN

@@ -1,0 +1,50 @@
+[
+  {
+    "id": "jennifer-ames",
+    "name": "Jennifer Ames",
+    "linkedinUrl": "https://www.linkedin.com/in/jenniferames/",
+    "admirationAngles": [
+      "creates trust quickly",
+      "leads with steady encouragement",
+      "turns momentum into something others can build on"
+    ],
+    "signatureThemes": ["leadership", "support", "reliability"],
+    "sparkleTags": ["leadership glow", "steady hand", "team lift"]
+  },
+  {
+    "id": "skye-hart",
+    "name": "Skye Hart",
+    "linkedinUrl": "https://www.linkedin.com/in/skyehart/",
+    "admirationAngles": [
+      "brings bright perspective to hard problems",
+      "makes collaboration feel lighter",
+      "pairs humor with thoughtful follow-through"
+    ],
+    "signatureThemes": ["humor", "kindness", "dedication"],
+    "sparkleTags": ["sunny energy", "joyful momentum", "clever sparkle"]
+  },
+  {
+    "id": "vivian-ching",
+    "name": "Vivian Ching",
+    "linkedinUrl": "https://www.linkedin.com/in/vching/",
+    "admirationAngles": [
+      "shows care in the details",
+      "builds calm confidence around the team",
+      "balances empathy with decisive action"
+    ],
+    "signatureThemes": ["empathy", "reliability", "leadership"],
+    "sparkleTags": ["careful craft", "calm anchor", "thoughtful force"]
+  },
+  {
+    "id": "nima-badiey",
+    "name": "Nima Badiey",
+    "linkedinUrl": "https://www.linkedin.com/in/nimabadiey/",
+    "admirationAngles": [
+      "gives people energy to keep going",
+      "pairs big ideas with generous support",
+      "makes bold work feel approachable and fun"
+    ],
+    "signatureThemes": ["support", "leadership", "kindness"],
+    "sparkleTags": ["builder spirit", "creative lift", "generous spark"]
+  }
+]
