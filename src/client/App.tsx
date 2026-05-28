@@ -6,11 +6,27 @@ import type {
   PersonWithNote
 } from "../shared/types";
 
+const SPOTLIGHT_STORAGE_KEY = "mas-spotlight-index";
+const SPOTLIGHT_ROTATION_INTERVAL_MS = 8000;
+
 function formatTimestamp(value: string) {
   return new Intl.DateTimeFormat("en-US", {
     dateStyle: "medium",
     timeStyle: "short"
   }).format(new Date(value));
+}
+
+function getNextSpotlightIndex(peopleCount: number) {
+  if (peopleCount <= 0) {
+    return 0;
+  }
+
+  const savedValue = window.localStorage.getItem(SPOTLIGHT_STORAGE_KEY);
+  const previousIndex = savedValue ? Number.parseInt(savedValue, 10) : -1;
+  const nextIndex = Number.isNaN(previousIndex) ? 0 : (previousIndex + 1) % peopleCount;
+
+  window.localStorage.setItem(SPOTLIGHT_STORAGE_KEY, String(nextIndex));
+  return nextIndex;
 }
 
 function App() {
@@ -44,6 +60,25 @@ function App() {
     void loadDashboard();
   }, []);
 
+  useEffect(() => {
+    if (!dashboard || dashboard.people.length <= 1) {
+      return;
+    }
+
+    const intervalId = window.setInterval(() => {
+      setSpotlightIndex((currentIndex) => {
+        const nextIndex = (currentIndex + 1) % dashboard.people.length;
+        window.localStorage.setItem(SPOTLIGHT_STORAGE_KEY, String(nextIndex));
+        return nextIndex;
+      });
+      setPulseKey((value) => value + 1);
+    }, SPOTLIGHT_ROTATION_INTERVAL_MS);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, [dashboard]);
+
   async function loadDashboard(forceRefresh = false) {
     try {
       setError(null);
@@ -59,9 +94,7 @@ function App() {
 
       const payload = (await response.json()) as DashboardPayload;
       setDashboard(payload);
-      setSpotlightIndex((currentIndex) =>
-        payload.people.length === 0 ? 0 : currentIndex % payload.people.length
-      );
+      setSpotlightIndex(() => getNextSpotlightIndex(payload.people.length));
     } catch (caughtError) {
       setError(
         caughtError instanceof Error ? caughtError.message : "Something bright went dim for a moment."
@@ -127,10 +160,13 @@ function App() {
       const nextIndex = Math.floor(Math.random() * dashboard.people.length);
 
       if (dashboard.people.length === 1 || nextIndex !== currentIndex) {
+        window.localStorage.setItem(SPOTLIGHT_STORAGE_KEY, String(nextIndex));
         return nextIndex;
       }
 
-      return (currentIndex + 1) % dashboard.people.length;
+      const fallbackIndex = (currentIndex + 1) % dashboard.people.length;
+      window.localStorage.setItem(SPOTLIGHT_STORAGE_KEY, String(fallbackIndex));
+      return fallbackIndex;
     });
     setPulseKey((value) => value + 1);
   }
