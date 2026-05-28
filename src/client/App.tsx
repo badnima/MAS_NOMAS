@@ -97,12 +97,6 @@ function App() {
         <header className="hero">
           <div className="hero-copy">
             <p className="eyebrow">MAS: Mutual Admiration Society</p>
-            <h1>Notes of appreciation with balloons, stars, and a little unicorn energy.</h1>
-            <p className="hero-text">
-              A daily gratitude dashboard that checks each configured LinkedIn profile, gathers the
-              latest public signal it can find, and turns it into one brief note of warm, playful
-              appreciation.
-            </p>
           </div>
 
           <div className="hero-actions">
@@ -155,9 +149,11 @@ function App() {
             <article key={person.id} className="person-card">
               <div className="card-topline">
                 <p className="person-name">{person.name}</p>
-                <span className={`snapshot-badge status-${person.note.snapshot.status}`}>
-                  {person.note.snapshot.status}
-                </span>
+                {person.note.snapshot.status !== "unavailable" ? (
+                  <span className={`snapshot-badge status-${person.note.snapshot.status}`}>
+                    {person.note.snapshot.status}
+                  </span>
+                ) : null}
               </div>
 
               <h2>{person.note.headline}</h2>
