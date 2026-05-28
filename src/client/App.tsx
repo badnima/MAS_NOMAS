@@ -220,7 +220,23 @@ function App() {
         <span />
       </div>
       <div className="rainbow-unicorn" aria-hidden="true">
-        <span className="rainbow-unicorn-icon">🦄</span>
+        <span className="rainbow-unicorn-body">
+          <span className="unicorn-tail" />
+          <span className="unicorn-wing" />
+          <span className="unicorn-torso" />
+          <span className="unicorn-neck" />
+          <span className="unicorn-head">
+            <span className="unicorn-ear unicorn-ear-back" />
+            <span className="unicorn-ear unicorn-ear-front" />
+            <span className="unicorn-eye" />
+            <span className="unicorn-horn" />
+            <span className="unicorn-mane" />
+          </span>
+          <span className="unicorn-leg unicorn-leg-one" />
+          <span className="unicorn-leg unicorn-leg-two" />
+          <span className="unicorn-leg unicorn-leg-three" />
+          <span className="unicorn-leg unicorn-leg-four" />
+        </span>
         <span className="rainbow-trail">
           <span className="rainbow-band rainbow-red" />
           <span className="rainbow-band rainbow-orange" />
