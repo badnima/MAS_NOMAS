@@ -554,6 +554,7 @@ button {
 .sky-ribbons,
 .sparkle-field,
 .bubble-stream,
+.bedazzle-burst,
 .rainbow-unicorn,
 .flying-creatures,
 .sparkle-row,
@@ -1267,6 +1268,43 @@ button {
   opacity: 0;
 }
 
+.bedazzle-burst {
+  position: fixed;
+  inset: 0;
+  z-index: 9;
+  overflow: hidden;
+}
+
+.bedazzle-burst-item {
+  position: fixed;
+  left: var(--burst-left);
+  top: var(--burst-top);
+  font-size: var(--burst-size);
+  line-height: 1;
+  opacity: 0;
+  transform: translate3d(0, 0, 0) scale(0.28) rotate(var(--burst-rotate-start));
+  will-change: transform, opacity;
+  animation: bedazzle-launch var(--burst-duration) cubic-bezier(0.18, 0.9, 0.28, 1) forwards;
+  animation-delay: var(--burst-delay);
+  text-shadow: 0 0.28rem 1rem rgba(255, 255, 255, 0.65);
+}
+
+.burst-star {
+  filter: drop-shadow(0 0 0.65rem rgba(255, 216, 77, 0.7));
+}
+
+.burst-animal {
+  filter: drop-shadow(0 0.35rem 0.8rem rgba(255, 79, 166, 0.24));
+}
+
+.burst-balloon {
+  filter: drop-shadow(0 0.35rem 0.8rem rgba(87, 186, 255, 0.2));
+}
+
+.burst-emoji {
+  filter: drop-shadow(0 0.3rem 0.7rem rgba(255, 93, 87, 0.18));
+}
+
 .unicorn-flight-one {
   top: 16%;
   animation: fly-across 23s linear infinite;
@@ -1473,6 +1511,27 @@ button {
 
   50% {
     transform: translateY(-0.3rem) rotate(-2deg);
+  }
+}
+
+@keyframes bedazzle-launch {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(0.28) rotate(var(--burst-rotate-start));
+  }
+
+  12% {
+    opacity: var(--burst-opacity);
+  }
+
+  65% {
+    opacity: var(--burst-opacity);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--burst-to-x), var(--burst-to-y), 0)
+      scale(var(--burst-scale)) rotate(var(--burst-rotate-end));
   }
 }
 

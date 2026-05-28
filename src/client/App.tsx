@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { type CSSProperties, useEffect, useRef, useState } from "react";
 
 import type {
   AuthStatusPayload,
@@ -10,6 +10,7 @@ const SPOTLIGHT_STORAGE_KEY = "mas-spotlight-index";
 const SPOTLIGHT_ROTATION_INTERVAL_MS = 8000;
 const SPARKLE_COUNT = 14;
 const BUBBLE_COUNT = 7;
+const BEDAZZLE_BURST_COUNT = 50;
 const FLAIR_CHIPS = [
   "Pinktopia",
   "Glitterati",
@@ -20,11 +21,36 @@ const FLAIR_CHIPS = [
   "Blingverse",
   "Gleamsquad"
 ] as const;
+const BEDAZZLE_TOKENS = {
+  star: ["⭐", "🌟", "✨", "💫"],
+  animal: ["🦄", "🐎", "🦋", "🐇", "🐣", "🐬"],
+  balloon: ["🎈", "🎈", "🎈", "🎉"],
+  emoji: ["💖", "💎", "🌈", "🩷", "💘", "💐", "🫧"]
+} as const;
 const FLYING_CREATURES = [
   { className: "unicorn-flight-one", icon: "🦄" },
   { className: "horse-flight", icon: "🐎" },
   { className: "unicorn-flight-two", icon: "🦄" }
 ] as const;
+
+type BedazzleBurstKind = keyof typeof BEDAZZLE_TOKENS;
+
+interface BedazzleBurstItem {
+  id: string;
+  symbol: string;
+  kind: BedazzleBurstKind;
+  left: number;
+  top: number;
+  toX: number;
+  toY: number;
+  size: number;
+  duration: number;
+  delay: number;
+  rotationStart: number;
+  rotationEnd: number;
+  scale: number;
+  opacity: number;
+}
 
 function formatTimestamp(value: string) {
   return new Intl.DateTimeFormat("en-US", {
@@ -46,14 +72,55 @@ function getNextSpotlightIndex(peopleCount: number) {
   return nextIndex;
 }
 
+function randomFrom<T>(values: readonly T[]) {
+  return values[Math.floor(Math.random() * values.length)];
+}
+
+function createBedazzleBurst() {
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
+  const kinds: BedazzleBurstKind[] = ["star", "animal", "balloon", "emoji"];
+
+  return Array.from({ length: BEDAZZLE_BURST_COUNT }, (_, index): BedazzleBurstItem => {
+    const kind = kinds[index % kinds.length];
+    const left = viewportWidth * (0.72 + Math.random() * 0.18);
+    const top = viewportHeight * (0.18 + Math.random() * 0.18);
+    const horizontalTravel = -(viewportWidth * (0.2 + Math.random() * 0.95));
+    let verticalTravel = viewportHeight * (Math.random() * 0.92 - 0.32);
+
+    if (kind === "balloon") {
+      verticalTravel -= viewportHeight * (0.14 + Math.random() * 0.18);
+    }
+
+    return {
+      id: `${Date.now()}-${index}`,
+      symbol: randomFrom(BEDAZZLE_TOKENS[kind]),
+      kind,
+      left,
+      top,
+      toX: horizontalTravel,
+      toY: verticalTravel,
+      size: 26 + Math.random() * 34,
+      duration: 1450 + Math.random() * 1350,
+      delay: Math.random() * 260,
+      rotationStart: -40 + Math.random() * 80,
+      rotationEnd: -220 + Math.random() * 440,
+      scale: 0.9 + Math.random() * 0.9,
+      opacity: 0.7 + Math.random() * 0.3
+    };
+  });
+}
+
 function App() {
   const [dashboard, setDashboard] = useState<DashboardPayload | null>(null);
   const [authStatus, setAuthStatus] = useState<AuthStatusPayload | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
+  const [bedazzleBurst, setBedazzleBurst] = useState<BedazzleBurstItem[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [spotlightIndex, setSpotlightIndex] = useState(0);
   const [pulseKey, setPulseKey] = useState(0);
+  const burstTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -96,6 +163,14 @@ function App() {
     };
   }, [dashboard]);
 
+  useEffect(() => {
+    return () => {
+      if (burstTimeoutRef.current !== null) {
+        window.clearTimeout(burstTimeoutRef.current);
+      }
+    };
+  }, []);
+
   async function loadDashboard(forceRefresh = false) {
     try {
       setError(null);
@@ -130,6 +205,24 @@ function App() {
 
     const payload = (await response.json()) as AuthStatusPayload;
     setAuthStatus(payload);
+  }
+
+  function triggerBedazzleBurst() {
+    const burstItems = createBedazzleBurst();
+    setBedazzleBurst(burstItems);
+
+    if (burstTimeoutRef.current !== null) {
+      window.clearTimeout(burstTimeoutRef.current);
+    }
+
+    const lastAnimationFrame = Math.max(
+      ...burstItems.map((item) => item.duration + item.delay)
+    );
+
+    burstTimeoutRef.current = window.setTimeout(() => {
+      setBedazzleBurst([]);
+      burstTimeoutRef.current = null;
+    }, lastAnimationFrame + 180);
   }
 
   function connectLinkedIn() {
@@ -186,6 +279,11 @@ function App() {
       return fallbackIndex;
     });
     setPulseKey((value) => value + 1);
+  }
+
+  async function handleBedazzleRefresh() {
+    triggerBedazzleBurst();
+    await loadDashboard(true);
   }
 
   const spotlightPerson: PersonWithNote | null =
@@ -263,6 +361,33 @@ function App() {
           </span>
         ))}
       </div>
+      {bedazzleBurst.length > 0 ? (
+        <div className="bedazzle-burst" aria-hidden="true">
+          {bedazzleBurst.map((item) => (
+            <span
+              key={item.id}
+              className={`bedazzle-burst-item burst-${item.kind}`}
+              style={
+                {
+                  "--burst-left": `${item.left}px`,
+                  "--burst-top": `${item.top}px`,
+                  "--burst-to-x": `${item.toX}px`,
+                  "--burst-to-y": `${item.toY}px`,
+                  "--burst-size": `${item.size}px`,
+                  "--burst-duration": `${item.duration}ms`,
+                  "--burst-delay": `${item.delay}ms`,
+                  "--burst-rotate-start": `${item.rotationStart}deg`,
+                  "--burst-rotate-end": `${item.rotationEnd}deg`,
+                  "--burst-scale": item.scale,
+                  "--burst-opacity": item.opacity
+                } as CSSProperties
+              }
+            >
+              {item.symbol}
+            </span>
+          ))}
+        </div>
+      ) : null}
 
       <button
         className="star-button floating-star"
@@ -328,7 +453,7 @@ function App() {
             <button
               className="refresh-button"
               type="button"
-              onClick={() => void loadDashboard(true)}
+              onClick={() => void handleBedazzleRefresh()}
               disabled={isRefreshing}
             >
               {isRefreshing ? "Shimmering..." : "Bedazzle today’s notes"}
