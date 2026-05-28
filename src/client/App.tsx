@@ -101,7 +101,7 @@ function createBedazzleBurst() {
       toX: horizontalTravel,
       toY: verticalTravel,
       size: 26 + Math.random() * 34,
-      duration: 1450 + Math.random() * 1350,
+      duration: 2650 + Math.random() * 1350,
       delay: Math.random() * 260,
       rotationStart: -40 + Math.random() * 80,
       rotationEnd: -220 + Math.random() * 440,
