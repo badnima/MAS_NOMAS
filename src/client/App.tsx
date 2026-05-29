@@ -157,11 +157,13 @@ function App() {
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [bedazzleBurst, setBedazzleBurst] = useState<BedazzleBurstItem[]>([]);
   const [fireworkBurst, setFireworkBurst] = useState<FireworkBurstItem[]>([]);
+  const [showWarningOverlay, setShowWarningOverlay] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [spotlightIndex, setSpotlightIndex] = useState(0);
   const [pulseKey, setPulseKey] = useState(0);
   const burstTimeoutRef = useRef<number | null>(null);
   const fireworkTimeoutRef = useRef<number | null>(null);
+  const warningTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -212,6 +214,10 @@ function App() {
 
       if (fireworkTimeoutRef.current !== null) {
         window.clearTimeout(fireworkTimeoutRef.current);
+      }
+
+      if (warningTimeoutRef.current !== null) {
+        window.clearTimeout(warningTimeoutRef.current);
       }
     };
   }, []);
@@ -284,6 +290,19 @@ function App() {
       setFireworkBurst([]);
       fireworkTimeoutRef.current = null;
     }, lastExplosion + 180);
+  }
+
+  function triggerWarningOverlay() {
+    setShowWarningOverlay(true);
+
+    if (warningTimeoutRef.current !== null) {
+      window.clearTimeout(warningTimeoutRef.current);
+    }
+
+    warningTimeoutRef.current = window.setTimeout(() => {
+      setShowWarningOverlay(false);
+      warningTimeoutRef.current = null;
+    }, 5000);
   }
 
   function connectLinkedIn() {
@@ -444,6 +463,11 @@ function App() {
           ))}
         </div>
       ) : null}
+      {showWarningOverlay ? (
+        <div className="warning-overlay" aria-hidden="true">
+          <img className="warning-overlay-image" src="/warning.jpg" alt="" />
+        </div>
+      ) : null}
       {bedazzleBurst.length > 0 ? (
         <div className="bedazzle-burst" aria-hidden="true">
           {bedazzleBurst.map((item) => (
@@ -479,6 +503,14 @@ function App() {
         aria-label="Create a new appreciation spotlight"
       >
         <span>Shine</span>
+      </button>
+      <button
+        className="star-button secret-star-button"
+        type="button"
+        onClick={triggerWarningOverlay}
+        aria-label="Launch secret warning"
+      >
+        <span>Psst</span>
       </button>
 
       <main className="page">
