@@ -141,7 +141,7 @@ function createFireworkBurst() {
     id: `firework-${Date.now()}-${index}`,
     left: viewportWidth * (0.06 + Math.random() * 0.88),
     top: viewportHeight * (0.08 + Math.random() * 0.72),
-    size: 46 + Math.random() * 48,
+    size: 85 + Math.random() * 48,
     delay: Math.random() * 4000,
     duration: 850 + Math.random() * 450,
     colorPrimary: randomFrom(FIREWORK_COLORS),
@@ -302,7 +302,7 @@ function App() {
     warningTimeoutRef.current = window.setTimeout(() => {
       setShowWarningOverlay(false);
       warningTimeoutRef.current = null;
-    }, 8000);
+    }, 10000);
   }
 
   function connectLinkedIn() {
