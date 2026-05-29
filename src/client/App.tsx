@@ -34,7 +34,13 @@ const FIREWORK_COLORS = [
   "#57cf65",
   "#57baff",
   "#ff8a5f",
+  "#4285F4",
+  "#DB4437",
+  "#F4B400",
+  "#0F9D58",
+  "#76b900",
   "#af6cff",
+  "#d2042d",
   "#ffffff"
 ] as const;
 const FLYING_CREATURES = [
@@ -141,7 +147,7 @@ function createFireworkBurst() {
     id: `firework-${Date.now()}-${index}`,
     left: viewportWidth * (0.06 + Math.random() * 0.88),
     top: viewportHeight * (0.08 + Math.random() * 0.72),
-    size: 85 + Math.random() * 48,
+    size: 105 + Math.random() * 48,
     delay: Math.random() * 4000,
     duration: 850 + Math.random() * 450,
     colorPrimary: randomFrom(FIREWORK_COLORS),
