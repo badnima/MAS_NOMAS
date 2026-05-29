@@ -163,12 +163,14 @@ function App() {
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [bedazzleBurst, setBedazzleBurst] = useState<BedazzleBurstItem[]>([]);
   const [fireworkBurst, setFireworkBurst] = useState<FireworkBurstItem[]>([]);
+  const [showSparkleOverlay, setShowSparkleOverlay] = useState(false);
   const [showWarningOverlay, setShowWarningOverlay] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [spotlightIndex, setSpotlightIndex] = useState(0);
   const [pulseKey, setPulseKey] = useState(0);
   const burstTimeoutRef = useRef<number | null>(null);
   const fireworkTimeoutRef = useRef<number | null>(null);
+  const sparkleTimeoutRef = useRef<number | null>(null);
   const warningTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -220,6 +222,10 @@ function App() {
 
       if (fireworkTimeoutRef.current !== null) {
         window.clearTimeout(fireworkTimeoutRef.current);
+      }
+
+      if (sparkleTimeoutRef.current !== null) {
+        window.clearTimeout(sparkleTimeoutRef.current);
       }
 
       if (warningTimeoutRef.current !== null) {
@@ -309,6 +315,19 @@ function App() {
       setShowWarningOverlay(false);
       warningTimeoutRef.current = null;
     }, 10000);
+  }
+
+  function triggerSparkleOverlay() {
+    setShowSparkleOverlay(true);
+
+    if (sparkleTimeoutRef.current !== null) {
+      window.clearTimeout(sparkleTimeoutRef.current);
+    }
+
+    sparkleTimeoutRef.current = window.setTimeout(() => {
+      setShowSparkleOverlay(false);
+      sparkleTimeoutRef.current = null;
+    }, 8000);
   }
 
   function connectLinkedIn() {
@@ -469,6 +488,11 @@ function App() {
           ))}
         </div>
       ) : null}
+      {showSparkleOverlay ? (
+        <div className="sparkle-overlay" aria-hidden="true">
+          <img className="sparkle-overlay-image" src="/sparkle.png" alt="" />
+        </div>
+      ) : null}
       {showWarningOverlay ? (
         <div className="warning-overlay" aria-hidden="true">
           <img className="warning-overlay-image" src="/warning.jpg" alt="" />
@@ -502,6 +526,14 @@ function App() {
         </div>
       ) : null}
 
+      <button
+        className="star-button sparkle-fantastic-button"
+        type="button"
+        onClick={triggerSparkleOverlay}
+        aria-label="Show Sparkle Fantastic event poster"
+      >
+        <span>Sparkle Fantastic</span>
+      </button>
       <button
         className="star-button floating-star"
         type="button"
