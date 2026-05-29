@@ -302,7 +302,7 @@ function App() {
     warningTimeoutRef.current = window.setTimeout(() => {
       setShowWarningOverlay(false);
       warningTimeoutRef.current = null;
-    }, 5000);
+    }, 8000);
   }
 
   function connectLinkedIn() {
