@@ -203,6 +203,17 @@ button {
   cursor: pointer;
 }
 
+.firework-button {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.95rem 1.35rem;
+  background: linear-gradient(135deg, #5a46ff, #ff4fa6 46%, #ffd84d 100%);
+  color: white;
+  font-weight: 800;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+
 .linkedin-button,
 .ghost-button {
   border: 0;
@@ -554,6 +565,7 @@ button {
 .sky-ribbons,
 .sparkle-field,
 .bubble-stream,
+.firework-burst-layer,
 .bedazzle-burst,
 .rainbow-unicorn,
 .flying-creatures,
@@ -1275,6 +1287,54 @@ button {
   overflow: hidden;
 }
 
+.firework-burst-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.firework-burst {
+  position: fixed;
+  left: var(--firework-left);
+  top: var(--firework-top);
+  width: var(--firework-size);
+  height: var(--firework-size);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.12);
+  animation: firework-bloom var(--firework-duration) ease-out forwards;
+  animation-delay: var(--firework-delay);
+}
+
+.firework-burst::before,
+.firework-burst::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+}
+
+.firework-burst::before {
+  background:
+    radial-gradient(circle at 50% 0%, var(--firework-primary) 0 7%, transparent 8%),
+    radial-gradient(circle at 82% 18%, var(--firework-secondary) 0 6%, transparent 7%),
+    radial-gradient(circle at 100% 50%, var(--firework-primary) 0 7%, transparent 8%),
+    radial-gradient(circle at 82% 82%, var(--firework-secondary) 0 6%, transparent 7%),
+    radial-gradient(circle at 50% 100%, var(--firework-primary) 0 7%, transparent 8%),
+    radial-gradient(circle at 18% 82%, var(--firework-secondary) 0 6%, transparent 7%),
+    radial-gradient(circle at 0% 50%, var(--firework-primary) 0 7%, transparent 8%),
+    radial-gradient(circle at 18% 18%, var(--firework-secondary) 0 6%, transparent 7%);
+  filter: drop-shadow(0 0 0.45rem var(--firework-glow));
+}
+
+.firework-burst::after {
+  background:
+    radial-gradient(circle, rgba(255, 255, 255, 0.95) 0 18%, transparent 20%),
+    radial-gradient(circle at 50% 50%, var(--firework-primary) 0 34%, transparent 36%);
+  transform: scale(0.22);
+  filter: blur(1px);
+}
+
 .bedazzle-burst-item {
   position: fixed;
   left: var(--burst-left);
@@ -1532,6 +1592,28 @@ button {
     opacity: 0;
     transform: translate3d(var(--burst-to-x), var(--burst-to-y), 0)
       scale(var(--burst-scale)) rotate(var(--burst-rotate-end));
+  }
+}
+
+@keyframes firework-bloom {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.08);
+  }
+
+  18% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.42);
+  }
+
+  45% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.42);
   }
 }
 

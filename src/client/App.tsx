@@ -11,6 +11,7 @@ const SPOTLIGHT_ROTATION_INTERVAL_MS = 8000;
 const SPARKLE_COUNT = 20;
 const BUBBLE_COUNT = 20;
 const BEDAZZLE_BURST_COUNT = 150;
+const FIREWORK_BURST_COUNT = 100;
 const FLAIR_CHIPS = [
   "Pinktopia",
   "Glitterati",
@@ -27,6 +28,15 @@ const BEDAZZLE_TOKENS = {
   balloon: ["🎈", "🎈", "🎈", "🎉"],
   emoji: ["💖", "💎", "🌈", "🩷", "💘", "💐", "🫧"]
 } as const;
+const FIREWORK_COLORS = [
+  "#ff4fa6",
+  "#ffd84d",
+  "#57cf65",
+  "#57baff",
+  "#ff8a5f",
+  "#af6cff",
+  "#ffffff"
+] as const;
 const FLYING_CREATURES = [
   { className: "unicorn-flight-one", icon: "🦄" },
   { className: "horse-flight", icon: "🐎" },
@@ -50,6 +60,18 @@ interface BedazzleBurstItem {
   rotationEnd: number;
   scale: number;
   opacity: number;
+}
+
+interface FireworkBurstItem {
+  id: string;
+  left: number;
+  top: number;
+  size: number;
+  delay: number;
+  duration: number;
+  colorPrimary: string;
+  colorSecondary: string;
+  glowColor: string;
 }
 
 function formatTimestamp(value: string) {
@@ -111,16 +133,35 @@ function createBedazzleBurst() {
   });
 }
 
+function createFireworkBurst() {
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
+
+  return Array.from({ length: FIREWORK_BURST_COUNT }, (_, index): FireworkBurstItem => ({
+    id: `firework-${Date.now()}-${index}`,
+    left: viewportWidth * (0.06 + Math.random() * 0.88),
+    top: viewportHeight * (0.08 + Math.random() * 0.72),
+    size: 46 + Math.random() * 48,
+    delay: Math.random() * 4000,
+    duration: 850 + Math.random() * 450,
+    colorPrimary: randomFrom(FIREWORK_COLORS),
+    colorSecondary: randomFrom(FIREWORK_COLORS),
+    glowColor: randomFrom(FIREWORK_COLORS)
+  }));
+}
+
 function App() {
   const [dashboard, setDashboard] = useState<DashboardPayload | null>(null);
   const [authStatus, setAuthStatus] = useState<AuthStatusPayload | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [bedazzleBurst, setBedazzleBurst] = useState<BedazzleBurstItem[]>([]);
+  const [fireworkBurst, setFireworkBurst] = useState<FireworkBurstItem[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [spotlightIndex, setSpotlightIndex] = useState(0);
   const [pulseKey, setPulseKey] = useState(0);
   const burstTimeoutRef = useRef<number | null>(null);
+  const fireworkTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -167,6 +208,10 @@ function App() {
     return () => {
       if (burstTimeoutRef.current !== null) {
         window.clearTimeout(burstTimeoutRef.current);
+      }
+
+      if (fireworkTimeoutRef.current !== null) {
+        window.clearTimeout(fireworkTimeoutRef.current);
       }
     };
   }, []);
@@ -223,6 +268,22 @@ function App() {
       setBedazzleBurst([]);
       burstTimeoutRef.current = null;
     }, lastAnimationFrame + 180);
+  }
+
+  function triggerFireworkBurst() {
+    const bursts = createFireworkBurst();
+    setFireworkBurst(bursts);
+
+    if (fireworkTimeoutRef.current !== null) {
+      window.clearTimeout(fireworkTimeoutRef.current);
+    }
+
+    const lastExplosion = Math.max(...bursts.map((burst) => burst.delay + burst.duration));
+
+    fireworkTimeoutRef.current = window.setTimeout(() => {
+      setFireworkBurst([]);
+      fireworkTimeoutRef.current = null;
+    }, lastExplosion + 180);
   }
 
   function connectLinkedIn() {
@@ -361,6 +422,28 @@ function App() {
           </span>
         ))}
       </div>
+      {fireworkBurst.length > 0 ? (
+        <div className="firework-burst-layer" aria-hidden="true">
+          {fireworkBurst.map((burst) => (
+            <span
+              key={burst.id}
+              className="firework-burst"
+              style={
+                {
+                  "--firework-left": `${burst.left}px`,
+                  "--firework-top": `${burst.top}px`,
+                  "--firework-size": `${burst.size}px`,
+                  "--firework-delay": `${burst.delay}ms`,
+                  "--firework-duration": `${burst.duration}ms`,
+                  "--firework-primary": burst.colorPrimary,
+                  "--firework-secondary": burst.colorSecondary,
+                  "--firework-glow": burst.glowColor
+                } as CSSProperties
+              }
+            />
+          ))}
+        </div>
+      ) : null}
       {bedazzleBurst.length > 0 ? (
         <div className="bedazzle-burst" aria-hidden="true">
           {bedazzleBurst.map((item) => (
@@ -457,6 +540,9 @@ function App() {
               disabled={isRefreshing}
             >
               {isRefreshing ? "Shimmering..." : "Bedazzle today’s notes"}
+            </button>
+            <button className="firework-button" type="button" onClick={triggerFireworkBurst}>
+              Sparkle my Life!
             </button>
           </div>
         </header>
